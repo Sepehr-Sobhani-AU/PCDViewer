@@ -12,6 +12,7 @@ setup(
         'PyQt5>=5.15.0',
         'numpy>=1.18.0',
         'PyOpenGL>=3.1.0',
+        'Open3D',
     ],
     entry_points={
         'console_scripts': [
