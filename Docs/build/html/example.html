@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PCDViewer Examples &mdash; PCDViewer 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="PCDViewer Modules" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PCDViewer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">PCDViewer Modules</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PCDViewer Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example1-script">Example1 Script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-components-of-the-example1">Key Components of the Example1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example2-script">Example2 Script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#point-cloud-sample-files">Point Cloud Sample Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-components-of-the-example2">Key Components of the Example2</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PCDViewer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PCDViewer Examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/example.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pcdviewer-examples">
+<h1>PCDViewer Examples<a class="headerlink" href="#pcdviewer-examples" title="Link to this heading">¶</a></h1>
+<p>This page provides two example usages of the PCDViewer package to help users get started.</p>
+<section id="example1-script">
+<h2>Example1 Script<a class="headerlink" href="#example1-script" title="Link to this heading">¶</a></h2>
+<p>This example demonstrates how to use the <cite>PCDViewerWidget</cite> in a PyQt5 application for visualising point cloud data.
+The script creates a simple PyQt5 application consisting of a <cite>PCDViewerWidget</cite> where users can visualise randomly
+generated 3D point cloud data.</p>
+</section>
+<section id="key-components-of-the-example1">
+<h2>Key Components of the Example1<a class="headerlink" href="#key-components-of-the-example1" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><strong>Point Cloud Generation</strong>:</dt><dd><p>The example generates 10,000 random 3D points (<cite>points</cite>) and assigns random RGB colors (<cite>colors</cite>). These points
+are represented as a NumPy array with a <cite>float32</cite> data type.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Creating the Qt Application</strong>:</dt><dd><p>A <cite>QApplication</cite> is created, which is required to run the Qt application. The main application is executed
+through <cite>sys.argv</cite>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Initialising the PCDViewerWidget</strong>:</dt><dd><dl class="simple">
+<dt>An instance of the <cite>PCDViewerWidget</cite> is created and customised:</dt><dd><ul class="simple">
+<li><p><cite>zoom_max_factor</cite> is set to <cite>3</cite> to limit the maximum zoom level.</p></li>
+<li><p><cite>default_zoom_factor</cite> is set to <cite>1.5</cite> to specify the initial zoom level.</p></li>
+<li><p><cite>point_size</cite> is set to <cite>2</cite> to make the points larger for better visibility.</p></li>
+<li><p>The <cite>set_points()</cite> method is used to set the randomly generated points and their corresponding colors to the viewer.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Launching the Application</strong>:</dt><dd><p>The <cite>PCDViewerWidget</cite> is displayed by calling the <cite>show()</cite> method, and the Qt application enters its main event loop
+with <cite>app.exec_()</cite>.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>This example serves as a starting point to integrate the <cite>PCDViewerWidget</cite> into larger applications, where users can
+visualise their point cloud data in an interactive 3D viewer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">pcdviewer.PCDViewerWidget</span> <span class="kn">import</span> <span class="n">PCDViewerWidget</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 4</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># Create a 10,000 random point ndarray with float32 data type</span>
+<span class="linenos"> 7</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos"> 8</span><span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="c1"># Initialize a Qt application</span>
+<span class="linenos">11</span><span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="c1"># Initialize PCDViewerWidget</span>
+<span class="linenos">14</span><span class="n">viewer</span> <span class="o">=</span> <span class="n">PCDViewerWidget</span><span class="p">()</span>
+<span class="linenos">15</span><span class="n">viewer</span><span class="o">.</span><span class="n">zoom_max_factor</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="linenos">16</span><span class="n">viewer</span><span class="o">.</span><span class="n">default_zoom_factor</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="linenos">17</span><span class="n">viewer</span><span class="o">.</span><span class="n">point_size</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">18</span><span class="n">viewer</span><span class="o">.</span><span class="n">set_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">colors</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="c1"># Execute the application</span>
+<span class="linenos">22</span><span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="example2-script">
+<h2>Example2 Script<a class="headerlink" href="#example2-script" title="Link to this heading">¶</a></h2>
+<p>This example demonstrates how to use the <cite>PCDViewerWidget</cite> in a PyQt5 application with a main window for visualising
+real-world point cloud data. The script creates a PyQt5 <cite>QMainWindow</cite> containing a <cite>PCDViewerWidget</cite> to display
+the 3D point cloud.
+The following script shows how to load <cite>.npy</cite> files and use the PCDViewerWidget to visualise the point cloud data.</p>
+</section>
+<section id="point-cloud-sample-files">
+<h2>Point Cloud Sample Files<a class="headerlink" href="#point-cloud-sample-files" title="Link to this heading">¶</a></h2>
+<p>There is a sample point cloud data, in .ply and .npy file formats, containing 78,000,000 points. It can be loaded and visualised using the PCDViewer or the PCDViewerWidget.
+Due to it’s large size, the sample point cloud data is not included in the repository by default. However, you can download it from the following link:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://drive.google.com/drive/folders/1OmusSVmtDM1ClJYEC_6n02--blED6aJY?usp=sharing">Download Example Files</a></p></li>
+</ul>
+<p>Below is a list of files available:</p>
+<ul class="simple">
+<li><p><cite>Toronto_Colors.ply</cite>:  Point Cloud file suitable to load by PCDViewer.</p></li>
+<li><p><cite>Toronto_Points.npy</cite>:  Point Cloud coordinates in numpy ndarray format, suitable to use by PCDViewerWidget.</p></li>
+<li><p><cite>Toronto_Colors.npy</cite>:  Point Cloud colour in numpy ndarray format, suitable to use by PCDViewerWidget.</p></li>
+</ul>
+</section>
+<section id="key-components-of-the-example2">
+<h2>Key Components of the Example2<a class="headerlink" href="#key-components-of-the-example2" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><strong>Application Window Setup</strong>:</dt><dd><ul class="simple">
+<li><p>The script creates a main window (<cite>QMainWindow</cite>) with a central widget and layout using PyQt5.</p></li>
+<li><p>The window is titled <cite>“PCDViewerWidget Example”</cite> and is set to a default size of <cite>800x600</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Point Cloud Data Loading</strong>:</dt><dd><ul class="simple">
+<li><p>Real-world point cloud data of Toronto is loaded using NumPy from <cite>.npy</cite> files (<cite>Toronto_Points.npy</cite> and <cite>Toronto_Colors.npy</cite>).</p></li>
+<li><p>These files contain 3D coordinates (<cite>sample_points</cite>) and RGB colors (<cite>sample_colors</cite>) of the point cloud.</p></li>
+<li><p>The loaded data is converted to a <cite>float32</cite> data type to ensure compatibility with the <cite>PCDViewerWidget</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Adding PCDViewerWidget to the Layout</strong>:</dt><dd><ul class="simple">
+<li><p>The <cite>PCDViewerWidget</cite> is instantiated and added to the layout of the central widget.</p></li>
+<li><p>The point cloud data is visualised by using the <cite>set_points()</cite> method of the <cite>PCDViewerWidget</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Launching the Application</strong>:</dt><dd><ul class="simple">
+<li><p>The <cite>main_window</cite> is shown, and the application enters its main event loop via <cite>app.exec_()</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>This example can be used as a reference for integrating the <cite>PCDViewerWidget</cite> into a larger PyQt5-based GUI application,
+where users can visualise detailed point cloud data interactively.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># This is the example code to explain how to use the PCDViewerWidget in a PyQt5 application.</span>
+<span class="linenos"> 2</span><span class="c1"># The example code creates a simple Qt application with a QMainWindow and a PCDViewerWidget.</span>
+<span class="linenos"> 3</span><span class="c1"># The PCDViewerWidget is populated with some sample points and colors.</span>
+<span class="linenos"> 4</span><span class="c1"># The example code can be run by executing the Example.py file.</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos"> 7</span><span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
+<span class="linenos"> 8</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="c1"># Import the PCDViewerWidget class from the PCDViewerWidget.py module in the pcdviewer package</span>
+<span class="linenos">11</span><span class="kn">from</span> <span class="nn">pcdviewer.PCDViewerWidget</span> <span class="kn">import</span> <span class="n">PCDViewerWidget</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="linenos">14</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Main function for the example code.&quot;&quot;&quot;</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>    <span class="c1"># Create a Qt application</span>
+<span class="linenos">17</span>    <span class="n">app</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="c1"># Create the main window</span>
+<span class="linenos">20</span>    <span class="n">main_window</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMainWindow</span><span class="p">()</span>
+<span class="linenos">21</span>    <span class="n">main_window</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;PCDViewerWidget Example&quot;</span><span class="p">)</span>
+<span class="linenos">22</span>    <span class="n">main_window</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span>    <span class="c1"># Create the central widget</span>
+<span class="linenos">25</span>    <span class="n">central_widget</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">()</span>
+<span class="linenos">26</span>    <span class="n">main_window</span><span class="o">.</span><span class="n">setCentralWidget</span><span class="p">(</span><span class="n">central_widget</span><span class="p">)</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>    <span class="c1"># Create a layout and add the PCDViewerWidget</span>
+<span class="linenos">29</span>    <span class="n">layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">(</span><span class="n">central_widget</span><span class="p">)</span>
+<span class="linenos">30</span>    <span class="n">viewer_widget</span> <span class="o">=</span> <span class="n">PCDViewerWidget</span><span class="p">(</span><span class="n">central_widget</span><span class="p">)</span>
+<span class="linenos">31</span>    <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">viewer_widget</span><span class="p">)</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span>    <span class="c1"># Set some sample points for the PCDViewerWidget</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span>    <span class="n">sample_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Toronto_Points.npy&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos">36</span>    <span class="n">sample_colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Toronto_Colors.npy&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos">37</span>    <span class="n">viewer_widget</span><span class="o">.</span><span class="n">set_points</span><span class="p">(</span><span class="n">sample_points</span><span class="p">,</span> <span class="n">sample_colors</span><span class="p">)</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span>    <span class="c1"># Show the main window</span>
+<span class="linenos">40</span>    <span class="n">main_window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span>    <span class="c1"># Execute the application</span>
+<span class="linenos">43</span>    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">())</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">46</span>    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="PCDViewer Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Sepehr Sobhani.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

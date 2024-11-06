@@ -1,0 +1,852 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PCDViewer Modules &mdash; PCDViewer 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PCDViewer Examples" href="example.html" />
+    <link rel="prev" title="Welcome to PCDViewer’s Documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PCDViewer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PCDViewer Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pcdviewer.PCDViewer.Ui_MainWindow"><code class="docutils literal notranslate"><span class="pre">Ui_MainWindow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewer.Ui_MainWindow.open_file_dialog"><code class="docutils literal notranslate"><span class="pre">Ui_MainWindow.open_file_dialog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewer.Ui_MainWindow.retranslateUi"><code class="docutils literal notranslate"><span class="pre">Ui_MainWindow.retranslateUi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewer.Ui_MainWindow.setupUi"><code class="docutils literal notranslate"><span class="pre">Ui_MainWindow.setupUi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.axis_line_length"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.axis_line_length</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.axis_line_width"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.axis_line_width</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.closeEvent"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.closeEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_camera_distance"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.default_camera_distance</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_pan_x"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.default_pan_x</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_pan_y"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.default_pan_y</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_pan_z"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.default_pan_z</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_rot_x"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.default_rot_x</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_rot_y"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.default_rot_y</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_rot_z"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.default_rot_z</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_zoom_factor"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.default_zoom_factor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.deselect_point_at"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.deselect_point_at()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.draw_axis_symbol"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.draw_axis_symbol()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.draw_sphere"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.draw_sphere()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.hide_axis_after_zoom"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.hide_axis_after_zoom()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.initializeGL"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.initializeGL()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.initialize_view"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.initialize_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.keyPressEvent"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.keyPressEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseDoubleClickEvent"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.mouseDoubleClickEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseMoveEvent"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.mouseMoveEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.mousePressEvent"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.mousePressEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseReleaseEvent"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.mouseReleaseEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.paintGL"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.paintGL()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.pan_sensitivity"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.pan_sensitivity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.pick_point"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.pick_point()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.picked_point_highlight_color"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.picked_point_highlight_color</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.picked_point_highlight_size"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.picked_point_highlight_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.picking_point_threshold_factor"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.picking_point_threshold_factor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.pixel_threshold"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.pixel_threshold</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.point_size"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.point_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.project_to_screen"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.project_to_screen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.render_picked_points"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.render_picked_points()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.render_point_cloud"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.render_point_cloud()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.reset_view"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.reset_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.resizeGL"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.resizeGL()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.rotate_sensitivity"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.rotate_sensitivity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.select_point_at"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.select_point_at()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.set_points"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.set_points()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.update_rotation_center"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.update_rotation_center()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.wheelEvent"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.wheelEvent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.zoom_max_factor"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.zoom_max_factor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.zoom_min_factor"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.zoom_min_factor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.zoom_sensitivity"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget.zoom_sensitivity</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">PCDViewer Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PCDViewer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PCDViewer Modules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pcdviewer-modules">
+<h1>PCDViewer Modules<a class="headerlink" href="#pcdviewer-modules" title="Link to this heading">¶</a></h1>
+<p>The following modules are part of the PCDViewer package. Click on a module to view detailed documentation about its contents.</p>
+<dl class="py class" id="module-pcdviewer.PCDViewer">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewer.Ui_MainWindow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pcdviewer.PCDViewer.</span></span><span class="sig-name descname"><span class="pre">Ui_MainWindow</span></span><a class="reference internal" href="_modules/pcdviewer/PCDViewer.html#Ui_MainWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewer.Ui_MainWindow" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The <cite>Ui_MainWindow</cite> class defines the user interface of the main application window, which serves as a graphical
+interface for visualising point cloud data using the PCDViewerWidget.</p>
+<p>The class uses PyQt5 to create the main window layout, including a menu bar, status bar, and a central widget that
+embeds a 3D OpenGL-based viewer for point clouds. The viewer allows users to interact with the point cloud data,
+providing an intuitive way to explore and visualise the content.</p>
+<section id="attributes">
+<h2>Attributes:<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>centralwidget<span class="classifier">QtWidgets.QWidget</span></dt><dd><p>The central widget for the main window, which contains all the main UI components.</p>
+</dd>
+<dt>main_layout<span class="classifier">QtWidgets.QVBoxLayout</span></dt><dd><p>Layout used to organise the PCDViewerWidget within the central widget.</p>
+</dd>
+<dt>openGLWidget<span class="classifier">PCDViewerWidget</span></dt><dd><p>Custom widget for viewing point cloud data using OpenGL.</p>
+</dd>
+<dt>menubar<span class="classifier">QtWidgets.QMenuBar</span></dt><dd><p>Menu bar of the main window, containing File and Help menus.</p>
+</dd>
+<dt>menuFile<span class="classifier">QtWidgets.QMenu</span></dt><dd><p>“File” menu containing actions such as opening files.</p>
+</dd>
+<dt>menuHelp<span class="classifier">QtWidgets.QMenu</span></dt><dd><p>“Help” menu for additional actions (currently empty).</p>
+</dd>
+<dt>statusbar<span class="classifier">QtWidgets.QStatusBar</span></dt><dd><p>Status bar for the main window, used to display status information.</p>
+</dd>
+<dt>actionOpen<span class="classifier">QtWidgets.QAction</span></dt><dd><p>Action to open a point cloud file, used in the File menu.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewer.Ui_MainWindow.open_file_dialog">
+<span class="sig-name descname"><span class="pre">open_file_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewer.html#Ui_MainWindow.open_file_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewer.Ui_MainWindow.open_file_dialog" title="Link to this definition">¶</a></dt>
+<dd><p>Open a file dialog to select a <cite>.ply</cite> point cloud file.</p>
+<p>This method allows the user to select a <cite>.ply</cite> file, which is then loaded using the Open3D library. The loaded
+point cloud data is converted to NumPy arrays for points and colors, and these arrays are passed to the
+PCDViewerWidget for visualisation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewer.Ui_MainWindow.retranslateUi">
+<span class="sig-name descname"><span class="pre">retranslateUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewer.html#Ui_MainWindow.retranslateUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewer.Ui_MainWindow.retranslateUi" title="Link to this definition">¶</a></dt>
+<dd><p>Set the display text for the user interface elements.</p>
+<p>This method is used to set the text for various UI components, including the menu titles and actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> (<em>QMainWindow</em>) – The main window instance to which this UI is applied.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewer.Ui_MainWindow.setupUi">
+<span class="sig-name descname"><span class="pre">setupUi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewer.html#Ui_MainWindow.setupUi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewer.Ui_MainWindow.setupUi" title="Link to this definition">¶</a></dt>
+<dd><p>Set up the user interface for the main window.</p>
+<p>This method is called to create and arrange all the components within the main window, including the menu bar,
+status bar, the central widget with the OpenGL-based PCDViewerWidget, and actions for interacting with the point
+cloud data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MainWindow</strong> (<em>QMainWindow</em>) – The main window instance to which this UI is applied.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<p>The <cite>Example</cite> folder also includes a sample point cloud data ,.ply file, that can be loaded and visualised using the PCDViewer package. Below is a list of files available:</p>
+<ul class="simple">
+<li><p><cite>Toronto.ply</cite>: A sample <cite>.ply</cite> file containing point cloud data.</p></li>
+</ul>
+<dl class="py class" id="module-pcdviewer.PCDViewerWidget">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pcdviewer.PCDViewerWidget.</span></span><span class="sig-name descname"><span class="pre">PCDViewerWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QOpenGLWidget</span></code></p>
+<p>A Qt-based OpenGL widget for viewing point cloud data (PCD).</p>
+<p>This class provides an interactive visualisation environment for point clouds, allowing for operations such as
+rotation, panning, zooming, and point selection. It leverages OpenGL for efficient rendering of large point
+clouds and supports advanced features such as axis symbol display, point picking, and modifying the centre of
+rotation.</p>
+<dl class="simple">
+<dt>Hotkeys:</dt><dd><ul class="simple">
+<li><p>Left Click: Rotate around the X and Y axes.</p></li>
+<li><p>CTRL + Left Click: Rotate around the Z-axis.</p></li>
+<li><p>Right/Middle Click: Pan along the X and Y axes.</p></li>
+<li><p>CTRL + Right/Middle Click: Pan along the Z-axis.</p></li>
+<li><p>Mouse Wheel: Zoom in and out.</p></li>
+<li><p>CTRL + R: Reset the camera view to its default state.</p></li>
+<li><p>SHIFT + Left Click: Select a point in the point cloud.</p></li>
+<li><p>SHIFT + Right Click: Deselect a point in the point cloud.</p></li>
+<li><p>ESC: Deselect all selected points after confirmation.</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id1">
+<h2>Attributes:<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<blockquote>
+<div><p>The following attributes represent internal state variables that are used in the widget’s logic and operations. They are not intended to be directly accessed or modified by users of this class, but instead are used internally to maintain the state of the viewer and perform necessary computations.</p>
+<ul class="simple">
+<li><p>center (numpy.ndarray): Centre of the current point cloud.</p></li>
+<li><p>size (numpy.ndarray): Size of the bounding box of the point cloud.</p></li>
+<li><p>max_extent (float): Maximum extent of the point cloud’s bounding box.</p></li>
+<li><p>fov (float): Field of view (in degrees) of the perspective camera.</p></li>
+<li><p>near_plane (float): Distance to the near clipping plane.</p></li>
+<li><p>far_plane (float): Distance to the far clipping plane.</p></li>
+<li><p>points (numpy.ndarray): Point cloud data including positions and optional colours.</p></li>
+<li><p>vbo (vbo.VBO): Vertex buffer object for efficient rendering of point cloud data.</p></li>
+<li><p>last_mouse_pos (QPoint): Last recorded mouse position for interaction.</p></li>
+<li><p>rot_x (float): Rotation angle around the X-axis.</p></li>
+<li><p>rot_y (float): Rotation angle around the Y-axis.</p></li>
+<li><p>rot_z (float): Rotation angle around the Z-axis.</p></li>
+<li><p>pan_x (float): Panning offset along the X-axis.</p></li>
+<li><p>pan_y (float): Panning offset along the Y-axis.</p></li>
+<li><p>pan_z (float): Panning offset along the Z-axis.</p></li>
+<li><p>is_rotating (bool): Flag to indicate if the widget is in rotation mode.</p></li>
+<li><p>is_rotating_z (bool): Flag to indicate if the widget is rotating around the Z-axis.</p></li>
+<li><p>is_panning (bool): Flag to indicate if the widget is in panning mode.</p></li>
+<li><p>is_panning_z (bool): Flag to indicate if the widget is panning along the Z-axis.</p></li>
+<li><p>show_axis (bool): Flag to indicate whether the axis symbol should be displayed.</p></li>
+<li><p>picked_points_indices (list of int): List of indices of picked points from the point cloud.</p></li>
+<li><p>model_view_matrix (numpy.ndarray): Model-view matrix for the current OpenGL context.</p></li>
+<li><p>projection_matrix (numpy.ndarray): Projection matrix for the current OpenGL context.</p></li>
+<li><p>viewport (numpy.ndarray): Viewport settings for the OpenGL context.</p></li>
+<li><p>camera_distance (float): Current distance of the camera from the point cloud.</p></li>
+<li><p>axis_timer (QTimer or None): Timer for hiding the axis symbol after panning.</p></li>
+</ul>
+</div></blockquote>
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.axis_line_length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">axis_line_length</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.axis_line_length" title="Link to this definition">¶</a></dt>
+<dd><p>Length of the axis lines for the axis symbol. Can be set to adjust axis visibility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.axis_line_width">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">axis_line_width</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.axis_line_width" title="Link to this definition">¶</a></dt>
+<dd><p>Width of the axis lines for the axis symbol. Can be set to adjust axis visibility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.closeEvent">
+<span class="sig-name descname"><span class="pre">closeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.closeEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.closeEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Handle the close event for cleaning up resources.</p>
+<p>This method is called when the widget is about to be closed. It unbinds and deletes the vertex buffer object
+(VBO) if it exists, ensuring that all allocated resources are properly released before the widget is closed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QCloseEvent</em>) – The close event containing details about the widget being closed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.default_camera_distance">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_camera_distance</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_camera_distance" title="Link to this definition">¶</a></dt>
+<dd><p>Default distance of the camera from the point cloud. Can be set to adjust the initial camera view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.default_pan_x">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_pan_x</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_pan_x" title="Link to this definition">¶</a></dt>
+<dd><p>The current value of the default pan along the X-axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.default_pan_y">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_pan_y</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_pan_y" title="Link to this definition">¶</a></dt>
+<dd><p>The current value of the default pan along the Y-axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.default_pan_z">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_pan_z</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_pan_z" title="Link to this definition">¶</a></dt>
+<dd><p>The current value of the default pan along the Z-axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.default_rot_x">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_rot_x</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_rot_x" title="Link to this definition">¶</a></dt>
+<dd><p>The current value of the default rotation around the X-axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.default_rot_y">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_rot_y</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_rot_y" title="Link to this definition">¶</a></dt>
+<dd><p>The current value of the default rotation around the Y-axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.default_rot_z">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_rot_z</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_rot_z" title="Link to this definition">¶</a></dt>
+<dd><p>The current value of the default rotation around the Z-axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.default_zoom_factor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_zoom_factor</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.default_zoom_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Default zoom factor for the camera. Can be set to adjust the initial zoom level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.deselect_point_at">
+<span class="sig-name descname"><span class="pre">deselect_point_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mouse_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.deselect_point_at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.deselect_point_at" title="Link to this definition">¶</a></dt>
+<dd><p>Deselect a point in the point cloud at the given mouse position.</p>
+<p>This method is used to deselect a previously selected point in the point cloud based on the mouse click position
+in widget coordinates. It projects the picked points to screen space and determines the closest point to the
+mouse click position. If the closest point lies within a specified pixel threshold, it is deselected.</p>
+<p>The pixel threshold used for deselecting points is defined by the <cite>pixel_threshold</cite> attribute. You can adjust
+this attribute to control how close a point must be to be considered for deselection.</p>
+<p>If a point is successfully deselected, its index is removed from the <cite>picked_points_indices</cite> attribute, which
+stores the indices of all currently selected points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mouse_pos</strong> (<em>QPoint</em>) – The position of the mouse click in widget coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.draw_axis_symbol">
+<span class="sig-name descname"><span class="pre">draw_axis_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.draw_axis_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.draw_axis_symbol" title="Link to this definition">¶</a></dt>
+<dd><p>Draw the axis symbol at the specified position.</p>
+<p>This method renders a 3D axis symbol, consisting of X, Y, and Z axes, at the given position in the point cloud
+space. The X-axis is rendered in red, the Y-axis in green, and the Z-axis in blue. This symbol is used to help
+users orient themselves within the point cloud.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>position</strong> (<em>tuple</em><em> or </em><em>list</em><em> or </em><em>numpy.ndarray</em>) – A 3-element array representing the (x, y, z) position where
+the axis symbol should be drawn.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.draw_sphere">
+<span class="sig-name descname"><span class="pre">draw_sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.draw_sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.draw_sphere" title="Link to this definition">¶</a></dt>
+<dd><p>Draw a sphere at the specified position.</p>
+<p>This method uses OpenGL to render a sphere at the given 3D position in the point cloud space. The sphere
+is often used to highlight specific points, such as those that have been picked by the user. The appearance
+of the sphere can be customised using the radius, slices, and stacks parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>tuple</em><em> or </em><em>list</em><em> or </em><em>numpy.ndarray</em>) – A 3-element array representing the (x, y, z) coordinates of
+the sphere’s centre.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – The radius of the sphere to be drawn.</p></li>
+<li><p><strong>slices</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of subdivisions around the Z-axis (similar to lines of longitude).
+Defaults to 16.</p></li>
+<li><p><strong>stacks</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of subdivisions along the Z-axis (similar to lines of latitude).
+Defaults to 16.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.hide_axis_after_zoom">
+<span class="sig-name descname"><span class="pre">hide_axis_after_zoom</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.hide_axis_after_zoom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.hide_axis_after_zoom" title="Link to this definition">¶</a></dt>
+<dd><p>Hide the axis symbol after zooming is completed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.initializeGL">
+<span class="sig-name descname"><span class="pre">initializeGL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.initializeGL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.initializeGL" title="Link to this definition">¶</a></dt>
+<dd><p>Initialise the OpenGL context for the widget.</p>
+<p>This method sets up the OpenGL environment, including clearing the background colour, enabling depth testing,
+and setting up blending options for transparency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the point cloud data (points) is not set before initialisation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.initialize_view">
+<span class="sig-name descname"><span class="pre">initialize_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.initialize_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.initialize_view" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the camera and view settings for the new point cloud.</p>
+<p>This method sets the default camera distance, pan, and zoom values
+after new point cloud data has been set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.keyPressEvent">
+<span class="sig-name descname"><span class="pre">keyPressEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.keyPressEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.keyPressEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Handle key press events for interaction with the point cloud.</p>
+<p>This method processes key press events to allow specific actions, such as deselecting all picked points. If
+the Escape key is pressed, a confirmation dialog is displayed, and if confirmed, all selected points are
+deselected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QKeyEvent</em>) – The key event containing details such as the key pressed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseDoubleClickEvent">
+<span class="sig-name descname"><span class="pre">mouseDoubleClickEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.mouseDoubleClickEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseDoubleClickEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Handle mouse double-click events for updating the centre of rotation.</p>
+<p>This method processes double-click events to update the centre of rotation of the point cloud view. When the
+user double-clicks on a point, the centre of rotation is moved to that point, making it the new focal point
+for subsequent rotations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QMouseEvent</em>) – The mouse event containing details such as the button pressed and the mouse position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseMoveEvent">
+<span class="sig-name descname"><span class="pre">mouseMoveEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.mouseMoveEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseMoveEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Handle mouse move events for updating the interaction state.</p>
+<p>This method processes mouse movement events to update the state of ongoing interactions such as rotation and
+panning. Depending on the interaction mode (e.g., rotating or panning), it adjusts the rotation angles or
+panning offsets based on the mouse movement distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QMouseEvent</em>) – The mouse event containing details such as the current mouse position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.mousePressEvent">
+<span class="sig-name descname"><span class="pre">mousePressEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.mousePressEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.mousePressEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Handle mouse press events for interaction with the point cloud.</p>
+<p>This method processes mouse press events to initiate interactions such as rotation, panning, and point
+selection. Depending on the mouse button and modifier keys pressed, the method determines the type of
+interaction (e.g., rotating, panning, or selecting points).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QMouseEvent</em>) – The mouse event containing details such as the button pressed and the mouse position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseReleaseEvent">
+<span class="sig-name descname"><span class="pre">mouseReleaseEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.mouseReleaseEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseReleaseEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Handle mouse release events for ending interactions.</p>
+<p>This method processes mouse release events to end interactions such as rotation or panning. When the user
+releases the mouse button, any ongoing rotation or panning is stopped, and the cursor is reset to its default
+state. The axis symbol is also hidden after the interaction ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QMouseEvent</em>) – The mouse event containing details such as the button released and the mouse position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.paintGL">
+<span class="sig-name descname"><span class="pre">paintGL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.paintGL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.paintGL" title="Link to this definition">¶</a></dt>
+<dd><p>Render the point cloud and other visual elements.</p>
+<p>This method is called whenever the widget needs to be repainted. It clears the colour and depth buffers, sets
+up the projection and model-view matrices, and renders the point cloud data, picked points, and optionally the
+axis symbol. The rendering includes applying transformations for panning, zooming, and rotation.</p>
+<p>If no point cloud data is set, the method returns without rendering anything.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.pan_sensitivity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pan_sensitivity</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.pan_sensitivity" title="Link to this definition">¶</a></dt>
+<dd><p>Sensitivity of the panning operation. Can be adjusted to control panning speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.pick_point">
+<span class="sig-name descname"><span class="pre">pick_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mouse_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.pick_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.pick_point" title="Link to this definition">¶</a></dt>
+<dd><p>Handle point picking or deselecting points in the point cloud.</p>
+<p>This method is used to pick or deselect points in the point cloud based on a mouse click position. It uses
+OpenGL to project the clicked point onto the screen space and determines whether a point in the point cloud
+is close enough to be picked or deselected. If <cite>select</cite> is True, the method attempts to pick a point;
+otherwise, it attempts to deselect a point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mouse_pos</strong> (<em>QPoint</em>) – The position of the mouse click in widget coordinates.</p></li>
+<li><p><strong>select</strong> (<em>bool</em><em>, </em><em>optional</em>) – A flag indicating whether to select (True) or deselect (False) the point. Defaults
+to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.picked_point_highlight_color">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">picked_point_highlight_color</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.picked_point_highlight_color" title="Link to this definition">¶</a></dt>
+<dd><p>RGB colour for highlighting picked points. Can be set to customise highlight colour.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.picked_point_highlight_size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">picked_point_highlight_size</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.picked_point_highlight_size" title="Link to this definition">¶</a></dt>
+<dd><p>Size factor for rendering picked points as highlighted spheres. Can be set to adjust highlight size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.picking_point_threshold_factor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">picking_point_threshold_factor</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.picking_point_threshold_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Threshold factor for determining if a point can be picked. Can be adjusted for selection precision.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.pixel_threshold">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pixel_threshold</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.pixel_threshold" title="Link to this definition">¶</a></dt>
+<dd><p>Threshold (in pixels) for selecting/deselecting points in screen space. Can be set to adjust selection accuracy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.point_size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">point_size</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.point_size" title="Link to this definition">¶</a></dt>
+<dd><p>Size of the rendered points. Can be set to adjust point cloud visibility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.project_to_screen">
+<span class="sig-name descname"><span class="pre">project_to_screen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point_3d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.project_to_screen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.project_to_screen" title="Link to this definition">¶</a></dt>
+<dd><p>Project a 3D point onto the screen space.</p>
+<p>This method takes a 3D point in the world coordinate system and projects it onto the 2D screen space using the
+current model-view matrix, projection matrix, and viewport settings. The resulting screen coordinates can be
+used for tasks such as selecting or highlighting points in the point cloud.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point_3d</strong> (<em>numpy.ndarray</em>) – A 3-element array representing the (x, y, z) coordinates of the point to be
+projected.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 3-element array representing the (x, y, z) coordinates of the projected point in screen
+space.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.render_picked_points">
+<span class="sig-name descname"><span class="pre">render_picked_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.render_picked_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.render_picked_points" title="Link to this definition">¶</a></dt>
+<dd><p>Render the picked points in the point cloud.</p>
+<p>This method highlights the picked points by drawing spheres at their positions. The colour and size of the
+spheres are determined by the <cite>picked_point_highlight_color</cite> and <cite>picked_point_highlight_size</cite> attributes.
+The purpose of this method is to visually distinguish the picked points from the rest of the point cloud.</p>
+<p>If no points have been picked, the method returns without rendering anything.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.render_point_cloud">
+<span class="sig-name descname"><span class="pre">render_point_cloud</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.render_point_cloud"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.render_point_cloud" title="Link to this definition">¶</a></dt>
+<dd><p>Render the point cloud data.</p>
+<p>This method is responsible for rendering the point cloud using OpenGL. It enables the necessary client states,
+binds the vertex buffer object (VBO), and sets the appropriate pointers for vertex and colour data. After
+rendering the points, the method disables the client states.</p>
+<p>The point cloud is rendered as a series of GL_POINTS, and each point’s colour is determined by the VBO data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.reset_view">
+<span class="sig-name descname"><span class="pre">reset_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.reset_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.reset_view" title="Link to this definition">¶</a></dt>
+<dd><p>Reset the camera to its default position and orientation.</p>
+<p>This method restores the default settings for the camera, including zoom, rotation, and panning,
+allowing the user to return to the initial view of the point cloud.
+Specifically, the following attributes are reset:</p>
+<ul class="simple">
+<li><p><cite>zoom_factor</cite>: Set to <cite>default_zoom_factor</cite> to restore the original zoom level.</p></li>
+<li><p><cite>rot_x</cite>, <cite>rot_y</cite>, <cite>rot_z</cite>: Rotation angles around the X, Y, and Z axes are reset to default values, default_rot_x, etc.</p></li>
+<li><p><cite>pan_x</cite>, <cite>pan_y</cite>, <cite>pan_z</cite>: Panning offsets along the X, Y, and Z axes are reset to default values, default_pan_x.</p></li>
+<li><p><cite>camera_distance</cite>: Set to <cite>default_camera_distance</cite> to restore the original distance from the point cloud.</p></li>
+</ul>
+<p>After resetting these parameters, the view is updated to reflect the changes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.resizeGL">
+<span class="sig-name descname"><span class="pre">resizeGL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.resizeGL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.resizeGL" title="Link to this definition">¶</a></dt>
+<dd><p>Handle the resizing of the OpenGL viewport.</p>
+<p>This method is called whenever the widget is resized. It updates the OpenGL viewport to match the new widget
+dimensions and adjusts the projection matrix to maintain the correct aspect ratio.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w</strong> (<em>int</em>) – The new width of the widget.</p></li>
+<li><p><strong>h</strong> (<em>int</em>) – The new height of the widget.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.rotate_sensitivity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotate_sensitivity</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.rotate_sensitivity" title="Link to this definition">¶</a></dt>
+<dd><p>Sensitivity of the rotation operation. Can be adjusted to control rotation speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.select_point_at">
+<span class="sig-name descname"><span class="pre">select_point_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mouse_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.select_point_at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.select_point_at" title="Link to this definition">¶</a></dt>
+<dd><p>Select a point in the point cloud at the given mouse position.</p>
+<p>This method is used to select a point in the point cloud based on the mouse click position in widget coordinates.
+It reads the depth buffer to get the depth value at the mouse position and then unprojects the screen coordinates
+to world coordinates. The closest point to the unprojected coordinates is selected if it lies within a specified
+threshold.</p>
+<p>The distance threshold used for selecting points is defined by the <cite>picking_point_threshold_factor</cite> attribute.
+You can adjust this attribute to control how close a point must be to be considered selectable.</p>
+<p>If a point is successfully selected, its index is added to the <cite>picked_points_indices</cite> attribute, which stores the
+indices of all currently selected points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mouse_pos</strong> (<em>QPoint</em>) – The position of the mouse click in widget coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.set_points">
+<span class="sig-name descname"><span class="pre">set_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.set_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.set_points" title="Link to this definition">¶</a></dt>
+<dd><p>Set the point cloud data to be visualised in the widget.</p>
+<p>This method accepts point coordinates and optional colour information. It also initialises
+the vertex buffer object (VBO) with the given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>numpy.ndarray</em>) – A Nx3 array of point coordinates (x, y, z). Must be of type float32.</p></li>
+<li><p><strong>colors</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – A Nx3 array of RGB colour values corresponding to each point.
+Must be of type float32. If not provided, all points will be rendered with a default colour.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the <cite>points</cite> array does not have the correct shape or data type.</p></li>
+<li><p><strong>AssertionError</strong> – If the <cite>colors</cite> array is provided but does not have the correct shape or data type.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.update_rotation_center">
+<span class="sig-name descname"><span class="pre">update_rotation_center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mouse_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.update_rotation_center"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.update_rotation_center" title="Link to this definition">¶</a></dt>
+<dd><p>Update the centre of rotation based on the given mouse position.</p>
+<p>This method is used to update the centre of rotation of the point cloud view based on a double-click event
+at a specific mouse position. It reads the depth value at the mouse position, unprojects the screen coordinates
+to world coordinates, and sets the centre of rotation to the closest point in the point cloud if it lies within
+a specified threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mouse_pos</strong> (<em>QPoint</em>) – The position of the mouse click in widget coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.wheelEvent">
+<span class="sig-name descname"><span class="pre">wheelEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pcdviewer/PCDViewerWidget.html#PCDViewerWidget.wheelEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.wheelEvent" title="Link to this definition">¶</a></dt>
+<dd><p>Handle mouse wheel events for zooming the view.</p>
+<p>This method processes mouse wheel events to adjust the zoom factor of the camera. The zoom sensitivity is
+controlled by the <cite>zoom_sensitivity</cite> attribute, and the resulting zoom factor is clamped between the
+<cite>zoom_min_factor</cite> and <cite>zoom_max_factor</cite> attributes to prevent excessive zooming in or out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>QWheelEvent</em>) – The wheel event containing details such as the direction and magnitude of the scroll.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.zoom_max_factor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">zoom_max_factor</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.zoom_max_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum zoom factor limit. Can be adjusted to control zoom limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.zoom_min_factor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">zoom_min_factor</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.zoom_min_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Minimum zoom factor limit. Can be adjusted to control zoom limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pcdviewer.PCDViewerWidget.PCDViewerWidget.zoom_sensitivity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">zoom_sensitivity</span></span><a class="headerlink" href="#pcdviewer.PCDViewerWidget.PCDViewerWidget.zoom_sensitivity" title="Link to this definition">¶</a></dt>
+<dd><p>Sensitivity of the zoom operation. Can be adjusted to control zoom speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to PCDViewer’s Documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="example.html" class="btn btn-neutral float-right" title="PCDViewer Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Sepehr Sobhani.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

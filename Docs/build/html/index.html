@@ -1,0 +1,239 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to PCDViewer’s Documentation! &mdash; PCDViewer 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PCDViewer Modules" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            PCDViewer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">PCDViewer Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">PCDViewer Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">PCDViewer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to PCDViewer’s Documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-pcdviewer-s-documentation">
+<h1>Welcome to PCDViewer’s Documentation!<a class="headerlink" href="#welcome-to-pcdviewer-s-documentation" title="Link to this heading">¶</a></h1>
+<p>PCDViewer is a lightweight, Qt-based OpenGL viewer designed for the efficient visualisation of point cloud data (PCD). This initial beta version is capable of handling midsize point clouds of up to approximately 100 million points, making it a useful tool for urban environments, geospatial analyses, and other projects involving detailed 3D spatial data. Whether you are a researcher, engineer, or enthusiast, PCDViewer provides essential tools to visualise and explore 3D data effectively.</p>
+<p>Built with performance and simplicity in mind, PCDViewer supports basic operations like rotation, panning, zooming, and point selection. It offers adjustable parameters to give users more control over the visualisation, without unnecessary complexity. As a beta release, PCDViewer is still evolving and has room for further enhancements, especially in terms of its scalability and features.</p>
+<p>PCDViewer is part of a larger project focused on point cloud analysis, classification, and feature detection using neural networks. Developers can easily embed <cite>PCDViewerWidget</cite> into their Python applications, making it a versatile component for visualising point clouds in broader workflows.</p>
+<p>This documentation will help you start using the PCDViewer package, covering its modules, usage examples, and developer notes to customise its functionality for your specific needs.</p>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Efficient Visualisation of Point Clouds</strong>: PCDViewer is optimised to handle point clouds containing around 100 million points, balancing performance and responsiveness.</p></li>
+<li><p><strong>Interactive Controls</strong>: Users can intuitively interact with point clouds, including zooming, panning, rotating, and selecting individual points.</p></li>
+<li><p><strong>Customisable Viewport</strong>: PCDViewerWidget allows fine-tuning of the rendering process, such as setting the point size, adjusting axis visibility, and highlighting picked points.</p></li>
+<li><p><strong>OpenGL Powered</strong>: By using OpenGL, PCDViewer ensures that rendering and interactions are fast and efficient, even for relatively large datasets.</p></li>
+<li><p><strong>Easy Integration</strong>: The package can be easily integrated into other Python-based applications thanks to its lightweight nature and reliance on popular frameworks like Qt5 and OpenGL.</p></li>
+</ul>
+</section>
+<section id="pcdviewerwidget-class-overview">
+<h2>PCDViewerWidget Class Overview<a class="headerlink" href="#pcdviewerwidget-class-overview" title="Link to this heading">¶</a></h2>
+<p>The <cite>PCDViewerWidget</cite> class is the core component of the PCDViewer package. It is a specialised widget, based on Qt’s <cite>QOpenGLWidget</cite>, designed specifically for rendering point clouds interactively. This class offers an immersive, interactive environment for viewing and exploring point cloud datasets.</p>
+<p>The <cite>PCDViewerWidget</cite> class supports the following capabilities:</p>
+<ul class="simple">
+<li><p><strong>Point Cloud Rendering</strong>: Render millions of 3D points efficiently, with options to assign RGB colour values to each point, thereby enhancing the data’s visual clarity.</p></li>
+<li><p><strong>Interactive Camera Control</strong>: Use mouse and keyboard inputs to rotate around the point cloud, zoom in and out, and pan across different sections of the data. The widget also supports resetting the camera view to its default state for convenience.</p></li>
+<li><p><strong>Point Picking</strong>: Select individual points within the point cloud to highlight them, allowing for in-depth analysis or interactive exploration. The highlight colour and size can be customised to suit user preferences.</p></li>
+<li><p><strong>Axis Display</strong>: Optionally display the X, Y, and Z axis lines within the viewport to provide a spatial reference. The length and thickness of these lines can be configured for clarity.</p></li>
+<li><p><strong>Versatile Visualisation</strong>: Features such as adjustable point size, zoom sensitivity, rotation, and panning capabilities are provided to cater to different datasets and user requirements.</p></li>
+<li><p><strong>OpenGL Optimisation</strong>: The widget uses OpenGL to handle the rendering pipeline efficiently, leveraging techniques such as Vertex Buffer Objects (VBOs) to ensure smooth interaction even with large datasets.</p></li>
+</ul>
+<p>With <cite>PCDViewerWidget</cite>, developers can easily embed an interactive 3D visualisation tool into their Python applications, making it ideal for anyone working with spatial data, from environmental modellers to urban planners.</p>
+</section>
+<section id="documentation-overview">
+<h2>Documentation Overview<a class="headerlink" href="#documentation-overview" title="Link to this heading">¶</a></h2>
+<p>This documentation aims to guide you through the different aspects of PCDViewer:</p>
+<ul class="simple">
+<li><p><strong>Modules</strong>: Learn about the different modules that make up the PCDViewer package and understand how they contribute to the functionality of the tool.</p></li>
+<li><p><strong>Usage Examples</strong>: See practical examples that show how to load and visualise point clouds, set up the viewer, and customise visualisation settings.</p></li>
+<li><p><strong>Developer Notes</strong>: Detailed explanations are provided for extending and customising the functionality of <cite>PCDViewerWidget</cite> and integrating it into larger projects.</p></li>
+</ul>
+<p>This introduction gives a fuller description of the PCDViewer package and the <cite>PCDViewerWidget</cite> class, emphasising its capabilities, key features, and the benefits to users. It is tailored for inclusion in the <cite>index.rst</cite> to help anyone new to the project understand its purpose and possibilities.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">PCDViewer Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#pcdviewer.PCDViewer.Ui_MainWindow"><code class="docutils literal notranslate"><span class="pre">Ui_MainWindow</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget"><code class="docutils literal notranslate"><span class="pre">PCDViewerWidget</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">PCDViewer Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="example.html#example1-script">Example1 Script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html#key-components-of-the-example1">Key Components of the Example1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html#example2-script">Example2 Script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html#point-cloud-sample-files">Point Cloud Sample Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html#key-components-of-the-example2">Key Components of the Example2</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
+<p>You can install the PCDViewer package using the <cite>setup.py</cite> file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># From package folder</span>
+pip<span class="w"> </span>install<span class="w"> </span>.
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pcdviewer
+</pre></div>
+</div>
+<p>This command will install all the necessary dependencies and set up the package for use.</p>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">¶</a></h2>
+<p>The following section provides a quick guide to start using PCDViewer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pcdviewer.PCDViewerWidget</span> <span class="kn">import</span> <span class="n">PCDViewerWidget</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># Create a 10,000 random point ndarray with float32 data type</span>
+<span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="c1"># Initialize a Qt application</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+
+<span class="c1"># Initialize PCDViewerWidget</span>
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">PCDViewerWidget</span><span class="p">()</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">zoom_max_factor</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">default_zoom_factor</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">point_size</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">set_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">colors</span><span class="p">)</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Execute the application</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="hotkeys">
+<h2>Hotkeys:<a class="headerlink" href="#hotkeys" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Left Click</strong>: Rotate around the X and Y axes.</p></li>
+<li><p><strong>CTRL + Left Click</strong>: Rotate around the Z-axis.</p></li>
+<li><p><strong>Right/Middle Click</strong>: Pan along the X and Y axes.</p></li>
+<li><p><strong>CTRL + Right/Middle Click</strong>: Pan along the Z-axis.</p></li>
+<li><p><strong>Mouse Wheel</strong>: Zoom in and out.</p></li>
+<li><p><strong>CTRL + R</strong>: Reset the camera view to its default state.</p></li>
+<li><p><strong>SHIFT + Left Click</strong>: Select a point in the point cloud.</p></li>
+<li><p><strong>SHIFT + Right Click</strong>: Deselect a point in the point cloud.</p></li>
+<li><p><strong>ESC</strong>: Deselect all selected points after confirmation.</p></li>
+</ul>
+</section>
+<section id="point-cloud-sample-files">
+<h2>Point Cloud Sample Files<a class="headerlink" href="#point-cloud-sample-files" title="Link to this heading">¶</a></h2>
+<p>There is a sample point cloud data, in .ply and .npy file formats, containing 78,000,000 points. It can be loaded and visualised using the PCDViewer or the PCDViewerWidget.
+Due to it’s large size, the sample point cloud data is not included in the repository by default. However, you can download it from the following link:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://drive.google.com/drive/folders/1OmusSVmtDM1ClJYEC_6n02--blED6aJY?usp=sharing">Download Example Files</a></p></li>
+</ul>
+<p>Below is a list of files available:</p>
+<ul class="simple">
+<li><p><cite>Toronto_Colors.ply</cite>:  Point Cloud file suitable to load by PCDViewer.</p></li>
+<li><p><cite>Toronto_Points.npy</cite>:  Point Cloud coordinates in numpy ndarray format, suitable to use by PCDViewerWidget.</p></li>
+<li><p><cite>Toronto_Colors.npy</cite>:  Point Cloud colour in numpy ndarray format, suitable to use by PCDViewerWidget.</p></li>
+</ul>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-right" title="PCDViewer Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Sepehr Sobhani.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

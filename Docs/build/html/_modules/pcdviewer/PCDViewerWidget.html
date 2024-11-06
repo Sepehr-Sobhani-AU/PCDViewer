@@ -1,0 +1,1309 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pcdviewer.PCDViewerWidget &mdash; PCDViewer 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            PCDViewer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">PCDViewer Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../example.html">PCDViewer Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PCDViewer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pcdviewer.PCDViewerWidget</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pcdviewer.PCDViewerWidget</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QOpenGLWidget</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QTimer</span>
+<span class="kn">from</span> <span class="nn">OpenGL.GL</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">OpenGL.GLU</span> <span class="kn">import</span> <span class="n">gluPerspective</span><span class="p">,</span><span class="n">gluProject</span><span class="p">,</span> <span class="n">gluUnProject</span>
+<span class="kn">from</span> <span class="nn">OpenGL.GLU</span> <span class="kn">import</span> <span class="n">gluNewQuadric</span><span class="p">,</span> <span class="n">gluDeleteQuadric</span><span class="p">,</span> <span class="n">gluQuadricDrawStyle</span>
+<span class="kn">from</span> <span class="nn">OpenGL.GLU</span> <span class="kn">import</span> <span class="n">gluSphere</span>
+<span class="kn">from</span> <span class="nn">OpenGL.GLU</span> <span class="kn">import</span> <span class="n">GLU_LINE</span><span class="p">,</span> <span class="n">GLU_FILL</span>
+<span class="kn">from</span> <span class="nn">OpenGL.arrays</span> <span class="kn">import</span> <span class="n">vbo</span>
+
+<div class="viewcode-block" id="PCDViewerWidget">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget">[docs]</a>
+<span class="k">class</span> <span class="nc">PCDViewerWidget</span><span class="p">(</span><span class="n">QOpenGLWidget</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Qt-based OpenGL widget for viewing point cloud data (PCD).</span>
+
+<span class="sd">    This class provides an interactive visualisation environment for point clouds, allowing for operations such as</span>
+<span class="sd">    rotation, panning, zooming, and point selection. It leverages OpenGL for efficient rendering of large point</span>
+<span class="sd">    clouds and supports advanced features such as axis symbol display, point picking, and modifying the centre of</span>
+<span class="sd">    rotation.</span>
+
+<span class="sd">    Hotkeys:</span>
+<span class="sd">        - Left Click: Rotate around the X and Y axes.</span>
+<span class="sd">        - CTRL + Left Click: Rotate around the Z-axis.</span>
+<span class="sd">        - Right/Middle Click: Pan along the X and Y axes.</span>
+<span class="sd">        - CTRL + Right/Middle Click: Pan along the Z-axis.</span>
+<span class="sd">        - Mouse Wheel: Zoom in and out.</span>
+<span class="sd">        - CTRL + R: Reset the camera view to its default state.</span>
+<span class="sd">        - SHIFT + Left Click: Select a point in the point cloud.</span>
+<span class="sd">        - SHIFT + Right Click: Deselect a point in the point cloud.</span>
+<span class="sd">        - ESC: Deselect all selected points after confirmation.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    -----------</span>
+<span class="sd">        The following attributes represent internal state variables that are used in the widget&#39;s logic and operations. They are not intended to be directly accessed or modified by users of this class, but instead are used internally to maintain the state of the viewer and perform necessary computations.</span>
+
+<span class="sd">        - center (numpy.ndarray): Centre of the current point cloud.</span>
+<span class="sd">        - size (numpy.ndarray): Size of the bounding box of the point cloud.</span>
+<span class="sd">        - max_extent (float): Maximum extent of the point cloud&#39;s bounding box.</span>
+<span class="sd">        - fov (float): Field of view (in degrees) of the perspective camera.</span>
+<span class="sd">        - near_plane (float): Distance to the near clipping plane.</span>
+<span class="sd">        - far_plane (float): Distance to the far clipping plane.</span>
+<span class="sd">        - points (numpy.ndarray): Point cloud data including positions and optional colours.</span>
+<span class="sd">        - vbo (vbo.VBO): Vertex buffer object for efficient rendering of point cloud data.</span>
+<span class="sd">        - last_mouse_pos (QPoint): Last recorded mouse position for interaction.</span>
+<span class="sd">        - rot_x (float): Rotation angle around the X-axis.</span>
+<span class="sd">        - rot_y (float): Rotation angle around the Y-axis.</span>
+<span class="sd">        - rot_z (float): Rotation angle around the Z-axis.</span>
+<span class="sd">        - pan_x (float): Panning offset along the X-axis.</span>
+<span class="sd">        - pan_y (float): Panning offset along the Y-axis.</span>
+<span class="sd">        - pan_z (float): Panning offset along the Z-axis.</span>
+<span class="sd">        - is_rotating (bool): Flag to indicate if the widget is in rotation mode.</span>
+<span class="sd">        - is_rotating_z (bool): Flag to indicate if the widget is rotating around the Z-axis.</span>
+<span class="sd">        - is_panning (bool): Flag to indicate if the widget is in panning mode.</span>
+<span class="sd">        - is_panning_z (bool): Flag to indicate if the widget is panning along the Z-axis.</span>
+<span class="sd">        - show_axis (bool): Flag to indicate whether the axis symbol should be displayed.</span>
+<span class="sd">        - picked_points_indices (list of int): List of indices of picked points from the point cloud.</span>
+<span class="sd">        - model_view_matrix (numpy.ndarray): Model-view matrix for the current OpenGL context.</span>
+<span class="sd">        - projection_matrix (numpy.ndarray): Projection matrix for the current OpenGL context.</span>
+<span class="sd">        - viewport (numpy.ndarray): Viewport settings for the OpenGL context.</span>
+<span class="sd">        - camera_distance (float): Current distance of the camera from the point cloud.</span>
+<span class="sd">        - axis_timer (QTimer or None): Timer for hiding the axis symbol after panning.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">point_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Size of the rendered points. Can be set to adjust point cloud visibility.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point_size</span>
+
+    <span class="nd">@point_size</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">point_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_point_size</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">axis_line_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Length of the axis lines for the axis symbol. Can be set to adjust axis visibility.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis_line_length</span>
+
+    <span class="nd">@axis_line_length</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">axis_line_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_axis_line_length</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">axis_line_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Width of the axis lines for the axis symbol. Can be set to adjust axis visibility.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis_line_width</span>
+
+    <span class="nd">@axis_line_width</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">axis_line_width</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_axis_line_width</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">picking_point_threshold_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Threshold factor for determining if a point can be picked. Can be adjusted for selection precision.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_picking_point_threshold_factor</span>
+
+    <span class="nd">@picking_point_threshold_factor</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">picking_point_threshold_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_picking_point_threshold_factor</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">picked_point_highlight_color</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        tuple of float: RGB colour for highlighting picked points. Can be set to customise highlight colour.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_picked_point_highlight_color</span>
+
+    <span class="nd">@picked_point_highlight_color</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">picked_point_highlight_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">v</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_picked_point_highlight_color</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">picked_point_highlight_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Size factor for rendering picked points as highlighted spheres. Can be set to adjust highlight size.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_picked_point_highlight_size</span>
+
+    <span class="nd">@picked_point_highlight_size</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">picked_point_highlight_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_picked_point_highlight_size</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">zoom_min_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Minimum zoom factor limit. Can be adjusted to control zoom limits.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_min_factor</span>
+
+    <span class="nd">@zoom_min_factor</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">zoom_min_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_min_factor</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">zoom_max_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Maximum zoom factor limit. Can be adjusted to control zoom limits.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_max_factor</span>
+
+    <span class="nd">@zoom_max_factor</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">zoom_max_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_min_factor</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_max_factor</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">zoom_sensitivity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Sensitivity of the zoom operation. Can be adjusted to control zoom speed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_sensitivity</span>
+
+    <span class="nd">@zoom_sensitivity</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">zoom_sensitivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_sensitivity</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pan_sensitivity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Sensitivity of the panning operation. Can be adjusted to control panning speed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pan_sensitivity</span>
+
+    <span class="nd">@pan_sensitivity</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">pan_sensitivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pan_sensitivity</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rotate_sensitivity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Sensitivity of the rotation operation. Can be adjusted to control rotation speed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotate_sensitivity</span>
+
+    <span class="nd">@rotate_sensitivity</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">rotate_sensitivity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rotate_sensitivity</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pixel_threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        int: Threshold (in pixels) for selecting/deselecting points in screen space. Can be set to adjust selection accuracy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pixel_threshold</span>
+
+    <span class="nd">@pixel_threshold</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">pixel_threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pixel_threshold</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_camera_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Default distance of the camera from the point cloud. Can be set to adjust the initial camera view.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_camera_distance</span>
+
+    <span class="nd">@default_camera_distance</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">default_camera_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_camera_distance</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_zoom_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: Default zoom factor for the camera. Can be set to adjust the initial zoom level.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_zoom_factor</span>
+
+    <span class="nd">@default_zoom_factor</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">default_zoom_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_zoom_factor</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_rot_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: The current value of the default rotation around the X-axis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_rot_x</span>
+
+    <span class="nd">@default_rot_x</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">default_rot_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_rot_x</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_rot_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: The current value of the default rotation around the Y-axis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_rot_y</span>
+
+    <span class="nd">@default_rot_y</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">default_rot_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_rot_y</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_rot_z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: The current value of the default rotation around the Z-axis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_rot_z</span>
+
+    <span class="nd">@default_rot_z</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">default_rot_z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_rot_z</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_pan_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: The current value of the default pan along the X-axis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_pan_x</span>
+
+    <span class="nd">@default_pan_x</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">default_pan_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_pan_x</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_pan_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: The current value of the default pan along the Y-axis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_pan_y</span>
+
+    <span class="nd">@default_pan_y</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">default_pan_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_pan_y</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_pan_z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        float: The current value of the default pan along the Z-axis.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_pan_z</span>
+
+    <span class="nd">@default_pan_z</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">default_pan_z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_pan_z</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Set focus policy to ensure the widget receives keyboard events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFocusPolicy</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">StrongFocus</span><span class="p">)</span>
+
+        <span class="c1"># Initialize variables for zoom to extent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_extent</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="mf">60.0</span>  <span class="c1"># Field of view in degrees</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">near_plane</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">far_plane</span> <span class="o">=</span> <span class="mf">1000.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Interaction variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_pos</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_x</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Rotation around X-axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_y</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Rotation around Y-axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_z</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Rotation around Z-axis</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pan_x</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Panning along X-axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pan_y</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Panning along Y-axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pan_z</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Panning along Z-axis</span>
+
+        <span class="c1"># Interaction flags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_rotating</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_rotating_z</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># New flag for Z-axis rotation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_panning</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_panning_z</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># New flag for Z-axis panning</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_axis</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Flag to show/hide the axis symbol</span>
+
+        <span class="c1"># Initialize list to store indices of picked points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picked_points_indices</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Initialize matrices used in the pick_point method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_view_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">()],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+        <span class="c1"># Setting properties as attributes that can be adjusted</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_point_size</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_axis_line_length</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_axis_line_width</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_picking_point_threshold_factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_picked_point_highlight_color</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_picked_point_highlight_size</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_min_factor</span> <span class="o">=</span> <span class="mf">0.02</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_max_factor</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_sensitivity</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pan_sensitivity</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rotate_sensitivity</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pixel_threshold</span> <span class="o">=</span> <span class="mi">5</span>
+
+        <span class="c1"># Properties for the attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_camera_distance</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_zoom_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zoom_max_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_rot_x</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_rot_y</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_rot_z</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_pan_x</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_pan_y</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_pan_z</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Initialize default values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera_distance</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_zoom_factor</span>
+
+        <span class="c1"># Timer for hiding the axis symbol after panning</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis_timer</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="PCDViewerWidget.initializeGL">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.initializeGL">[docs]</a>
+    <span class="k">def</span> <span class="nf">initializeGL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise the OpenGL context for the widget.</span>
+
+<span class="sd">        This method sets up the OpenGL environment, including clearing the background colour, enabling depth testing,</span>
+<span class="sd">        and setting up blending options for transparency.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the point cloud data (points) is not set before initialisation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># OpenGL initialization</span>
+        <span class="n">glClearColor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_DEPTH_TEST</span><span class="p">)</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_VERTEX_PROGRAM_POINT_SIZE</span><span class="p">)</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_BLEND</span><span class="p">)</span>
+        <span class="n">glBlendFunc</span><span class="p">(</span><span class="n">GL_SRC_ALPHA</span><span class="p">,</span> <span class="n">GL_ONE_MINUS_SRC_ALPHA</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.initialize_view">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.initialize_view">[docs]</a>
+    <span class="k">def</span> <span class="nf">initialize_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the camera and view settings for the new point cloud.</span>
+
+<span class="sd">        This method sets the default camera distance, pan, and zoom values</span>
+<span class="sd">        after new point cloud data has been set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Zoom extent</span>
+        <span class="c1"># Calculate center, size, and max extent</span>
+        <span class="n">min_bounds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">max_bounds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_bounds</span> <span class="o">+</span> <span class="n">max_bounds</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">max_bounds</span> <span class="o">-</span> <span class="n">min_bounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_extent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+        <span class="c1"># Calculate initial camera distance</span>
+        <span class="n">half_fov_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_camera_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_extent</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">half_fov_rad</span><span class="p">))</span> <span class="o">*</span> <span class="mf">1.2</span>  <span class="c1"># Include padding factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_camera_distance</span>
+
+        <span class="c1"># Pan the camera to the center of the point cloud</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_pan_x</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_pan_y</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_pan_z</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pan_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_pan_x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pan_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_pan_y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pan_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_pan_z</span>
+
+        <span class="c1"># Set near and far planes based on the new camera distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">near_plane</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera_distance</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_extent</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Ensure near plane is positive</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">far_plane</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera_distance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_extent</span> <span class="o">*</span> <span class="mi">2</span>
+
+        <span class="c1"># Reset zoom factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_zoom_factor</span>
+
+        <span class="c1"># Trigger a redraw to reflect the updated point cloud</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.set_points">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.set_points">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">colors</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the point cloud data to be visualised in the widget.</span>
+
+<span class="sd">        This method accepts point coordinates and optional colour information. It also initialises</span>
+<span class="sd">        the vertex buffer object (VBO) with the given data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            points (numpy.ndarray): A Nx3 array of point coordinates (x, y, z). Must be of type float32.</span>
+<span class="sd">            colors (numpy.ndarray, optional): A Nx3 array of RGB colour values corresponding to each point.</span>
+<span class="sd">                Must be of type float32. If not provided, all points will be rendered with a default colour.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: If the `points` array does not have the correct shape or data type.</span>
+<span class="sd">            AssertionError: If the `colors` array is provided but does not have the correct shape or data type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Points array must have shape Nx3&quot;</span>
+        <span class="k">assert</span> <span class="n">points</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="s2">&quot;Points array must be of type float32&quot;</span>
+
+        <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">colors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;Points and colors must have the same number of entries&quot;</span>
+            <span class="k">assert</span> <span class="n">colors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Colors array must have shape Nx3&quot;</span>
+            <span class="k">assert</span> <span class="n">colors</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="s2">&quot;Colors array must be of type float32&quot;</span>
+
+        <span class="c1"># Extract colors</span>
+        <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">points</span><span class="p">,</span> <span class="n">colors</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="c1"># Invalidate the existing VBO if it exists, as the points have changed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Initialize the view after setting points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_view</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.draw_axis_symbol">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.draw_axis_symbol">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_axis_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the axis symbol at the specified position.</span>
+
+<span class="sd">        This method renders a 3D axis symbol, consisting of X, Y, and Z axes, at the given position in the point cloud</span>
+<span class="sd">        space. The X-axis is rendered in red, the Y-axis in green, and the Z-axis in blue. This symbol is used to help</span>
+<span class="sd">        users orient themselves within the point cloud.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            position (tuple or list or numpy.ndarray): A 3-element array representing the (x, y, z) position where</span>
+<span class="sd">                the axis symbol should be drawn.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">glPushMatrix</span><span class="p">()</span>
+
+        <span class="n">glLineWidth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_line_width</span><span class="p">)</span>
+        <span class="n">glTranslatef</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="n">glBegin</span><span class="p">(</span><span class="n">GL_LINES</span><span class="p">)</span>
+        <span class="c1"># X-axis in red</span>
+        <span class="n">glColor3f</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">glVertex3f</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">glVertex3f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_line_length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="c1"># Y-axis in green</span>
+        <span class="n">glColor3f</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">glVertex3f</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">glVertex3f</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis_line_length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="c1"># Z-axis in blue</span>
+        <span class="n">glColor3f</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">glVertex3f</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">glVertex3f</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis_line_length</span><span class="p">)</span>
+        <span class="n">glEnd</span><span class="p">()</span>
+
+        <span class="n">glLineWidth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_line_width</span><span class="p">)</span>
+
+        <span class="n">glPopMatrix</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.paintGL">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.paintGL">[docs]</a>
+    <span class="k">def</span> <span class="nf">paintGL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render the point cloud and other visual elements.</span>
+
+<span class="sd">        This method is called whenever the widget needs to be repainted. It clears the colour and depth buffers, sets</span>
+<span class="sd">        up the projection and model-view matrices, and renders the point cloud data, picked points, and optionally the</span>
+<span class="sd">        axis symbol. The rendering includes applying transformations for panning, zooming, and rotation.</span>
+
+<span class="sd">        If no point cloud data is set, the method returns without rendering anything.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">glClear</span><span class="p">(</span><span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">)</span>
+
+        <span class="c1"># Update projection matrix</span>
+        <span class="n">glMatrixMode</span><span class="p">(</span><span class="n">GL_PROJECTION</span><span class="p">)</span>
+        <span class="n">glLoadIdentity</span><span class="p">()</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
+        <span class="n">aspect</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">h</span> <span class="k">if</span> <span class="n">h</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">gluPerspective</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom_factor</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_plane</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_plane</span><span class="p">)</span>
+
+        <span class="c1"># Update model-view matrix</span>
+        <span class="n">glMatrixMode</span><span class="p">(</span><span class="n">GL_MODELVIEW</span><span class="p">)</span>
+        <span class="n">glLoadIdentity</span><span class="p">()</span>
+
+        <span class="c1"># Move the camera back</span>
+        <span class="n">camera_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera_distance</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom_factor</span>
+        <span class="n">glTranslatef</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">camera_distance</span><span class="p">)</span>
+
+        <span class="c1"># Apply panning</span>
+        <span class="n">glTranslatef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pan_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pan_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pan_z</span><span class="p">)</span>
+
+        <span class="c1"># Translate to the center of rotation</span>
+        <span class="n">glTranslatef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="c1"># Apply rotations around the origin</span>
+        <span class="n">glRotatef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_x</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">glRotatef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_y</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">glRotatef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_z</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="c1"># Translate back from the center</span>
+        <span class="n">glTranslatef</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="c1"># Render the point cloud</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_point_cloud</span><span class="p">()</span>
+
+        <span class="c1"># Render picked points</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_picked_points</span><span class="p">()</span>
+
+        <span class="c1"># Store matrices for picking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_view_matrix</span> <span class="o">=</span> <span class="n">glGetDoublev</span><span class="p">(</span><span class="n">GL_MODELVIEW_MATRIX</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">glGetDoublev</span><span class="p">(</span><span class="n">GL_PROJECTION_MATRIX</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport</span> <span class="o">=</span> <span class="n">glGetIntegerv</span><span class="p">(</span><span class="n">GL_VIEWPORT</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Draw the point of view (POV) sphere</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_axis</span><span class="p">:</span>
+            <span class="c1"># Draw axis symbol at the center of rotation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_axis_symbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.render_point_cloud">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.render_point_cloud">[docs]</a>
+    <span class="k">def</span> <span class="nf">render_point_cloud</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render the point cloud data.</span>
+
+<span class="sd">        This method is responsible for rendering the point cloud using OpenGL. It enables the necessary client states,</span>
+<span class="sd">        binds the vertex buffer object (VBO), and sets the appropriate pointers for vertex and colour data. After</span>
+<span class="sd">        rendering the points, the method disables the client states.</span>
+
+<span class="sd">        The point cloud is rendered as a series of GL_POINTS, and each point&#39;s colour is determined by the VBO data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Create and bind the VBO if it&#39;s not already created</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="o">=</span> <span class="n">vbo</span><span class="o">.</span><span class="n">VBO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+        <span class="c1">#glEnable(GL_POINT_SMOOTH)</span>
+        <span class="n">glPointSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point_size</span><span class="p">)</span>
+
+        <span class="c1"># Enable client states</span>
+        <span class="n">glEnableClientState</span><span class="p">(</span><span class="n">GL_VERTEX_ARRAY</span><span class="p">)</span>
+        <span class="n">glEnableClientState</span><span class="p">(</span><span class="n">GL_COLOR_ARRAY</span><span class="p">)</span>
+
+        <span class="c1"># Bind the VBO</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span>
+
+        <span class="c1"># Set pointers to the VBO data</span>
+        <span class="n">stride</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">itemsize</span>
+        <span class="n">glVertexPointer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span><span class="p">)</span>
+        <span class="n">glColorPointer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="o">+</span> <span class="mi">12</span><span class="p">)</span>
+
+        <span class="c1"># Draw all points</span>
+        <span class="n">glDrawArrays</span><span class="p">(</span><span class="n">GL_POINTS</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">))</span>
+
+        <span class="c1"># Disable client states</span>
+        <span class="n">glDisableClientState</span><span class="p">(</span><span class="n">GL_VERTEX_ARRAY</span><span class="p">)</span>
+        <span class="n">glDisableClientState</span><span class="p">(</span><span class="n">GL_COLOR_ARRAY</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.render_picked_points">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.render_picked_points">[docs]</a>
+    <span class="k">def</span> <span class="nf">render_picked_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render the picked points in the point cloud.</span>
+
+<span class="sd">        This method highlights the picked points by drawing spheres at their positions. The colour and size of the</span>
+<span class="sd">        spheres are determined by the `picked_point_highlight_color` and `picked_point_highlight_size` attributes.</span>
+<span class="sd">        The purpose of this method is to visually distinguish the picked points from the rest of the point cloud.</span>
+
+<span class="sd">        If no points have been picked, the method returns without rendering anything.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Highlight picked points by drawing spheres</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">picked_points_indices</span><span class="p">:</span>
+            <span class="n">glColor3f</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">picked_point_highlight_color</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">picked_points_indices</span><span class="p">:</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+                <span class="c1"># Calculate the radius of the sphere based on the max extent of the point cloud</span>
+                <span class="c1"># / 1000 is a scaling factor to adjust a reasonable value size of the sphere</span>
+                <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_extent</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">picked_point_highlight_size</span> <span class="o">/</span> <span class="mi">1000</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw_sphere</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.resizeGL">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.resizeGL">[docs]</a>
+    <span class="k">def</span> <span class="nf">resizeGL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle the resizing of the OpenGL viewport.</span>
+
+<span class="sd">        This method is called whenever the widget is resized. It updates the OpenGL viewport to match the new widget</span>
+<span class="sd">        dimensions and adjusts the projection matrix to maintain the correct aspect ratio.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            w (int): The new width of the widget.</span>
+<span class="sd">            h (int): The new height of the widget.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">aspect</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">h</span>
+        <span class="n">glViewport</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+
+        <span class="c1"># Update stored viewport</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+        <span class="n">glMatrixMode</span><span class="p">(</span><span class="n">GL_PROJECTION</span><span class="p">)</span>
+        <span class="n">glLoadIdentity</span><span class="p">()</span>
+        <span class="n">gluPerspective</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom_factor</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near_plane</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_plane</span><span class="p">)</span>
+        <span class="n">glMatrixMode</span><span class="p">(</span><span class="n">GL_MODELVIEW</span><span class="p">)</span>
+        <span class="n">glLoadIdentity</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.mousePressEvent">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.mousePressEvent">[docs]</a>
+    <span class="k">def</span> <span class="nf">mousePressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle mouse press events for interaction with the point cloud.</span>
+
+<span class="sd">        This method processes mouse press events to initiate interactions such as rotation, panning, and point</span>
+<span class="sd">        selection. Depending on the mouse button and modifier keys pressed, the method determines the type of</span>
+<span class="sd">        interaction (e.g., rotating, panning, or selecting points).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (QMouseEvent): The mouse event containing details such as the button pressed and the mouse position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_pos</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+        <span class="n">modifiers</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">modifiers</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">modifiers</span> <span class="o">&amp;</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ShiftModifier</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">:</span>
+                <span class="c1"># Shift + Left Click: Select a point</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pick_point</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">(),</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">RightButton</span><span class="p">:</span>
+                <span class="c1"># Shift + Right Click: Deselect a point</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pick_point</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">(),</span> <span class="n">select</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">modifiers</span> <span class="o">&amp;</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ControlModifier</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">:</span>
+                <span class="c1"># Ctrl + Left Click: Rotate around Z-axis</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">OpenHandCursor</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">is_rotating_z</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">RightButton</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">MiddleButton</span><span class="p">:</span>
+                <span class="c1"># Ctrl + Right/Middle Click: Pan along Z-axis</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ClosedHandCursor</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">is_panning_z</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_axis</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Show axis when panning</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">:</span>
+                <span class="c1"># Rotate around X and Y axes</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">OpenHandCursor</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">is_rotating</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">RightButton</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">MiddleButton</span><span class="p">:</span>
+                <span class="c1"># Pan along X and Y axes</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ClosedHandCursor</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">is_panning</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_axis</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Show axis when panning</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.mouseDoubleClickEvent">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseDoubleClickEvent">[docs]</a>
+    <span class="k">def</span> <span class="nf">mouseDoubleClickEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle mouse double-click events for updating the centre of rotation.</span>
+
+<span class="sd">        This method processes double-click events to update the centre of rotation of the point cloud view. When the</span>
+<span class="sd">        user double-clicks on a point, the centre of rotation is moved to that point, making it the new focal point</span>
+<span class="sd">        for subsequent rotations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (QMouseEvent): The mouse event containing details such as the button pressed and the mouse position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">:</span>
+            <span class="c1"># Update the rotation center on double left-click</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_rotation_center</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.mouseReleaseEvent">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseReleaseEvent">[docs]</a>
+    <span class="k">def</span> <span class="nf">mouseReleaseEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle mouse release events for ending interactions.</span>
+
+<span class="sd">        This method processes mouse release events to end interactions such as rotation or panning. When the user</span>
+<span class="sd">        releases the mouse button, any ongoing rotation or panning is stopped, and the cursor is reset to its default</span>
+<span class="sd">        state. The axis symbol is also hidden after the interaction ends.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (QMouseEvent): The mouse event containing details such as the button released and the mouse position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_rotating</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_rotating_z</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ArrowCursor</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">RightButton</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">MiddleButton</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_panning</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_panning_z</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">ArrowCursor</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_axis</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Hide axis when panning stops</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.mouseMoveEvent">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.mouseMoveEvent">[docs]</a>
+    <span class="k">def</span> <span class="nf">mouseMoveEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle mouse move events for updating the interaction state.</span>
+
+<span class="sd">        This method processes mouse movement events to update the state of ongoing interactions such as rotation and</span>
+<span class="sd">        panning. Depending on the interaction mode (e.g., rotating or panning), it adjusts the rotation angles or</span>
+<span class="sd">        panning offsets based on the mouse movement distance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (QMouseEvent): The mouse event containing details such as the current mouse position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_pos</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_pos</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_pos</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_rotating</span><span class="p">:</span>
+            <span class="c1"># Rotate around X and Y axes</span>
+            <span class="c1"># / 10 is a scaling factor to adjust the rotation sensitivity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rot_x</span> <span class="o">+=</span> <span class="n">dy</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotate_sensitivity</span> <span class="o">/</span> <span class="mi">10</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rot_y</span> <span class="o">+=</span> <span class="n">dx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotate_sensitivity</span> <span class="o">/</span> <span class="mi">10</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_rotating_z</span><span class="p">:</span>
+            <span class="c1"># Rotate around Z-axis</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rot_z</span> <span class="o">+=</span> <span class="n">dx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotate_sensitivity</span> <span class="o">/</span> <span class="mi">10</span>  <span class="c1"># Horizontal movement affects Z rotation</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_panning</span><span class="p">:</span>
+            <span class="c1"># Pan along X and Y axes</span>
+            <span class="c1"># / 10000 is a scaling factor to adjust the panning sensitivity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pan_x</span> <span class="o">+=</span> <span class="n">dx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pan_sensitivity</span> <span class="o">/</span> <span class="mi">10000</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera_distance</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pan_y</span> <span class="o">-=</span> <span class="n">dy</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pan_sensitivity</span> <span class="o">/</span> <span class="mi">10000</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera_distance</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_panning_z</span><span class="p">:</span>
+            <span class="c1"># Pan along Z-axis</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pan_z</span> <span class="o">+=</span> <span class="n">dy</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pan_sensitivity</span> <span class="o">/</span> <span class="mi">10000</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera_distance</span>  <span class="c1"># Vertical movement affects Z panning</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_mouse_pos</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.wheelEvent">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.wheelEvent">[docs]</a>
+    <span class="k">def</span> <span class="nf">wheelEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle mouse wheel events for zooming the view.</span>
+
+<span class="sd">        This method processes mouse wheel events to adjust the zoom factor of the camera. The zoom sensitivity is</span>
+<span class="sd">        controlled by the `zoom_sensitivity` attribute, and the resulting zoom factor is clamped between the</span>
+<span class="sd">        `zoom_min_factor` and `zoom_max_factor` attributes to prevent excessive zooming in or out.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (QWheelEvent): The wheel event containing details such as the direction and magnitude of the scroll.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">angleDelta</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>
+        <span class="c1"># / 1000 is a scaling factor to be able to set the defult_zoom_sensitivity to a reasonable value</span>
+        <span class="c1">#</span>
+        <span class="n">zoom_step</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom_sensitivity</span> <span class="o">/</span> <span class="mi">1000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_factor</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">zoom_step</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_factor</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zoom_min_factor</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zoom_factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom_max_factor</span><span class="p">))</span>  <span class="c1"># Limit zoom factor</span>
+
+        <span class="c1"># Show the axis symbol after zooming</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_axis</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Set a timer to hide the axis symbol after zooming is done</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis_timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis_timer</span><span class="o">.</span><span class="n">setSingleShot</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis_timer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hide_axis_after_zoom</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis_timer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>  <span class="c1"># 500 milliseconds delay to hide the axis symbol</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.hide_axis_after_zoom">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.hide_axis_after_zoom">[docs]</a>
+    <span class="k">def</span> <span class="nf">hide_axis_after_zoom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hide the axis symbol after zooming is completed.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_axis</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.closeEvent">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.closeEvent">[docs]</a>
+    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle the close event for cleaning up resources.</span>
+
+<span class="sd">        This method is called when the widget is about to be closed. It unbinds and deletes the vertex buffer object</span>
+<span class="sd">        (VBO) if it exists, ensuring that all allocated resources are properly released before the widget is closed.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (QCloseEvent): The close event containing details about the widget being closed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Make the OpenGL context current</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">makeCurrent</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span><span class="o">.</span><span class="n">unbind</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vbo</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Remove the reference to the VBO</span>
+
+        <span class="c1"># Now, delete OpenGL resources explicitly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deleteOpenGLResources</span><span class="p">()</span>
+
+        <span class="c1"># Call the parent class&#39;s closeEvent</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">closeEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.keyPressEvent">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.keyPressEvent">[docs]</a>
+    <span class="k">def</span> <span class="nf">keyPressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle key press events for interaction with the point cloud.</span>
+
+<span class="sd">        This method processes key press events to allow specific actions, such as deselecting all picked points. If</span>
+<span class="sd">        the Escape key is pressed, a confirmation dialog is displayed, and if confirmed, all selected points are</span>
+<span class="sd">        deselected.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event (QKeyEvent): The key event containing details such as the key pressed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_Escape</span><span class="p">:</span>
+            <span class="c1"># Create a confirmation dialog box</span>
+            <span class="n">reply</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;Confirmation&#39;</span><span class="p">,</span> <span class="s1">&#39;Deselect all selected points?&#39;</span><span class="p">,</span>
+                                         <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span><span class="p">:</span>
+                <span class="c1"># Clear all selected points if confirmed</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">picked_points_indices</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">modifiers</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ControlModifier</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key_R</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset_view</span><span class="p">()</span>
+
+        <span class="c1"># Ensure the parent class handles other key events</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PCDViewerWidget</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">keyPressEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.pick_point">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.pick_point">[docs]</a>
+    <span class="k">def</span> <span class="nf">pick_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouse_pos</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle point picking or deselecting points in the point cloud.</span>
+
+<span class="sd">        This method is used to pick or deselect points in the point cloud based on a mouse click position. It uses</span>
+<span class="sd">        OpenGL to project the clicked point onto the screen space and determines whether a point in the point cloud</span>
+<span class="sd">        is close enough to be picked or deselected. If `select` is True, the method attempts to pick a point;</span>
+<span class="sd">        otherwise, it attempts to deselect a point.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mouse_pos (QPoint): The position of the mouse click in widget coordinates.</span>
+<span class="sd">            select (bool, optional): A flag indicating whether to select (True) or deselect (False) the point. Defaults</span>
+<span class="sd">                to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">select</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">select_point_at</span><span class="p">(</span><span class="n">mouse_pos</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deselect_point_at</span><span class="p">(</span><span class="n">mouse_pos</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.project_to_screen">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.project_to_screen">[docs]</a>
+    <span class="k">def</span> <span class="nf">project_to_screen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_3d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Project a 3D point onto the screen space.</span>
+
+<span class="sd">        This method takes a 3D point in the world coordinate system and projects it onto the 2D screen space using the</span>
+<span class="sd">        current model-view matrix, projection matrix, and viewport settings. The resulting screen coordinates can be</span>
+<span class="sd">        used for tasks such as selecting or highlighting points in the point cloud.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            point_3d (numpy.ndarray): A 3-element array representing the (x, y, z) coordinates of the point to be</span>
+<span class="sd">                projected.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: A 3-element array representing the (x, y, z) coordinates of the projected point in screen</span>
+<span class="sd">            space.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ensure OpenGL context is current</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">makeCurrent</span><span class="p">()</span>
+
+        <span class="c1"># Use stored matrices</span>
+        <span class="n">modelview</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_view_matrix</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span>
+        <span class="n">viewport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport</span>
+
+        <span class="c1"># Use gluProject to project the point</span>
+        <span class="n">screen_pos</span> <span class="o">=</span> <span class="n">gluProject</span><span class="p">(</span>
+            <span class="n">point_3d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">point_3d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">point_3d</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">modelview</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">viewport</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">screen_pos</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.draw_sphere">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.draw_sphere">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">slices</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">stacks</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw a sphere at the specified position.</span>
+
+<span class="sd">        This method uses OpenGL to render a sphere at the given 3D position in the point cloud space. The sphere</span>
+<span class="sd">        is often used to highlight specific points, such as those that have been picked by the user. The appearance</span>
+<span class="sd">        of the sphere can be customised using the radius, slices, and stacks parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            position (tuple or list or numpy.ndarray): A 3-element array representing the (x, y, z) coordinates of</span>
+<span class="sd">                the sphere&#39;s centre.</span>
+<span class="sd">            radius (float): The radius of the sphere to be drawn.</span>
+<span class="sd">            slices (int, optional): The number of subdivisions around the Z-axis (similar to lines of longitude).</span>
+<span class="sd">                Defaults to 16.</span>
+<span class="sd">            stacks (int, optional): The number of subdivisions along the Z-axis (similar to lines of latitude).</span>
+<span class="sd">                Defaults to 16.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">glPushMatrix</span><span class="p">()</span>
+        <span class="n">glTranslatef</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">quadric</span> <span class="o">=</span> <span class="n">gluNewQuadric</span><span class="p">()</span>
+        <span class="n">gluQuadricDrawStyle</span><span class="p">(</span><span class="n">quadric</span><span class="p">,</span> <span class="n">GLU_FILL</span><span class="p">)</span>  <span class="c1"># Use GLU_LINE for wireframe</span>
+        <span class="n">gluSphere</span><span class="p">(</span><span class="n">quadric</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">slices</span><span class="p">,</span> <span class="n">stacks</span><span class="p">)</span>
+        <span class="n">gluDeleteQuadric</span><span class="p">(</span><span class="n">quadric</span><span class="p">)</span>
+        <span class="n">glPopMatrix</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.select_point_at">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.select_point_at">[docs]</a>
+    <span class="k">def</span> <span class="nf">select_point_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouse_pos</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Select a point in the point cloud at the given mouse position.</span>
+
+<span class="sd">        This method is used to select a point in the point cloud based on the mouse click position in widget coordinates.</span>
+<span class="sd">        It reads the depth buffer to get the depth value at the mouse position and then unprojects the screen coordinates</span>
+<span class="sd">        to world coordinates. The closest point to the unprojected coordinates is selected if it lies within a specified</span>
+<span class="sd">        threshold.</span>
+
+<span class="sd">        The distance threshold used for selecting points is defined by the `picking_point_threshold_factor` attribute.</span>
+<span class="sd">        You can adjust this attribute to control how close a point must be to be considered selectable.</span>
+
+<span class="sd">        If a point is successfully selected, its index is added to the `picked_points_indices` attribute, which stores the</span>
+<span class="sd">        indices of all currently selected points.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mouse_pos (QPoint): The position of the mouse click in widget coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ensure OpenGL context is current</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">makeCurrent</span><span class="p">()</span>
+
+        <span class="c1"># Use stored matrices</span>
+        <span class="n">modelview</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_view_matrix</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span>
+        <span class="n">viewport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport</span>
+
+        <span class="c1"># Get the window coordinates</span>
+        <span class="n">win_x</span> <span class="o">=</span> <span class="n">mouse_pos</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
+        <span class="n">win_y</span> <span class="o">=</span> <span class="n">viewport</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">mouse_pos</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>  <span class="c1"># Invert Y coordinate</span>
+
+        <span class="c1"># Read the depth value at the mouse position</span>
+        <span class="n">z_buffer</span> <span class="o">=</span> <span class="n">glReadPixels</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">win_x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">win_y</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GL_DEPTH_COMPONENT</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">)</span>
+        <span class="n">win_z</span> <span class="o">=</span> <span class="n">z_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Handle cases where the depth value is 1.0 (background)</span>
+        <span class="k">if</span> <span class="n">win_z</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Unproject the window coordinates to get the world coordinates</span>
+        <span class="n">world_coords</span> <span class="o">=</span> <span class="n">gluUnProject</span><span class="p">(</span><span class="n">win_x</span><span class="p">,</span> <span class="n">win_y</span><span class="p">,</span> <span class="n">win_z</span><span class="p">,</span> <span class="n">modelview</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">viewport</span><span class="p">)</span>
+        <span class="n">pick_point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">world_coords</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="c1"># Find the closest point in the point cloud to the picked point</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">pick_point</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">min_distance_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[</span><span class="n">min_distance_index</span><span class="p">]</span>
+
+        <span class="c1"># Set a threshold to determine if a point is close enough to be considered picked</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_extent</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">picking_point_threshold_factor</span>
+
+        <span class="k">if</span> <span class="n">min_distance</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">:</span>
+            <span class="c1"># Add the index to the list of picked points</span>
+            <span class="k">if</span> <span class="n">min_distance_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">picked_points_indices</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">picked_points_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">min_distance_index</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.deselect_point_at">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.deselect_point_at">[docs]</a>
+    <span class="k">def</span> <span class="nf">deselect_point_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouse_pos</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deselect a point in the point cloud at the given mouse position.</span>
+
+<span class="sd">        This method is used to deselect a previously selected point in the point cloud based on the mouse click position</span>
+<span class="sd">        in widget coordinates. It projects the picked points to screen space and determines the closest point to the</span>
+<span class="sd">        mouse click position. If the closest point lies within a specified pixel threshold, it is deselected.</span>
+
+<span class="sd">        The pixel threshold used for deselecting points is defined by the `pixel_threshold` attribute. You can adjust</span>
+<span class="sd">        this attribute to control how close a point must be to be considered for deselection.</span>
+
+<span class="sd">        If a point is successfully deselected, its index is removed from the `picked_points_indices` attribute, which</span>
+<span class="sd">        stores the indices of all currently selected points.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mouse_pos (QPoint): The position of the mouse click in widget coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ensure OpenGL context is current</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">makeCurrent</span><span class="p">()</span>
+
+        <span class="c1"># Use stored matrices</span>
+        <span class="n">viewport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport</span>
+
+        <span class="c1"># Convert mouse position to screen space coordinates</span>
+        <span class="n">click_x</span> <span class="o">=</span> <span class="n">mouse_pos</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
+        <span class="n">click_y</span> <span class="o">=</span> <span class="n">viewport</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">mouse_pos</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>  <span class="c1"># Invert Y coordinate (adjust if necessary)</span>
+
+        <span class="c1"># Project picked points to screen space</span>
+        <span class="n">screen_positions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">picked_points_indices</span><span class="p">:</span>
+            <span class="n">point_3d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">screen_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_to_screen</span><span class="p">(</span><span class="n">point_3d</span><span class="p">)</span>
+            <span class="n">screen_positions</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">index</span><span class="p">,</span> <span class="n">screen_pos</span><span class="p">))</span>
+
+        <span class="c1"># Find the closest picked point to the mouse click</span>
+        <span class="n">min_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="n">closest_index</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">screen_pos</span> <span class="ow">in</span> <span class="n">screen_positions</span><span class="p">:</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">screen_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">click_x</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">screen_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">click_y</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="n">min_distance</span><span class="p">:</span>
+                <span class="n">min_distance</span> <span class="o">=</span> <span class="n">distance</span>
+                <span class="n">closest_index</span> <span class="o">=</span> <span class="n">index</span>
+
+        <span class="c1"># Define a threshold in pixels (e.g., radius of the sphere in screen space)</span>
+        <span class="c1"># TODO: Not sure if the pixel threshold is appropriate for all cases</span>
+        <span class="n">pixel_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_threshold</span>
+
+        <span class="k">if</span> <span class="n">min_distance</span> <span class="o">&lt;=</span> <span class="n">pixel_threshold</span><span class="p">:</span>
+            <span class="c1"># Remove the point from picked points</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">picked_points_indices</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">closest_index</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.update_rotation_center">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.update_rotation_center">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_rotation_center</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mouse_pos</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the centre of rotation based on the given mouse position.</span>
+
+<span class="sd">        This method is used to update the centre of rotation of the point cloud view based on a double-click event</span>
+<span class="sd">        at a specific mouse position. It reads the depth value at the mouse position, unprojects the screen coordinates</span>
+<span class="sd">        to world coordinates, and sets the centre of rotation to the closest point in the point cloud if it lies within</span>
+<span class="sd">        a specified threshold.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            mouse_pos (QPoint): The position of the mouse click in widget coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ensure OpenGL context is current</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">makeCurrent</span><span class="p">()</span>
+
+        <span class="c1"># Use stored matrices</span>
+        <span class="n">modelview</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_view_matrix</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span>
+        <span class="n">viewport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport</span>
+
+        <span class="c1"># Get the window coordinates</span>
+        <span class="n">win_x</span> <span class="o">=</span> <span class="n">mouse_pos</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
+        <span class="n">win_y</span> <span class="o">=</span> <span class="n">viewport</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">mouse_pos</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>  <span class="c1"># Invert Y coordinate</span>
+
+        <span class="c1"># Read the depth value at the mouse position</span>
+        <span class="n">z_buffer</span> <span class="o">=</span> <span class="n">glReadPixels</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">win_x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">win_y</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GL_DEPTH_COMPONENT</span><span class="p">,</span> <span class="n">GL_FLOAT</span><span class="p">)</span>
+        <span class="n">win_z</span> <span class="o">=</span> <span class="n">z_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Handle cases where the depth value is 1.0 (background)</span>
+        <span class="k">if</span> <span class="n">win_z</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="c1"># No depth information; do not update center</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Unproject the window coordinates to get the world coordinates</span>
+        <span class="n">world_coords</span> <span class="o">=</span> <span class="n">gluUnProject</span><span class="p">(</span><span class="n">win_x</span><span class="p">,</span> <span class="n">win_y</span><span class="p">,</span> <span class="n">win_z</span><span class="p">,</span> <span class="n">modelview</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">viewport</span><span class="p">)</span>
+        <span class="n">click_point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">world_coords</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="c1"># Find the closest point in the point cloud to the click point</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">click_point</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">min_distance_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        <span class="n">min_distance</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[</span><span class="n">min_distance_index</span><span class="p">]</span>
+
+        <span class="c1"># Set a threshold to determine if a point is close enough</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_extent</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">picking_point_threshold_factor</span>  <span class="c1"># Adjust as needed</span>
+
+        <span class="k">if</span> <span class="n">min_distance</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">:</span>
+            <span class="c1"># Update the center to the new point</span>
+            <span class="n">old_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">min_distance_index</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PCDViewerWidget.reset_view">
+<a class="viewcode-back" href="../../modules.html#pcdviewer.PCDViewerWidget.PCDViewerWidget.reset_view">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the camera to its default position and orientation.</span>
+
+<span class="sd">        This method restores the default settings for the camera, including zoom, rotation, and panning,</span>
+<span class="sd">        allowing the user to return to the initial view of the point cloud.</span>
+<span class="sd">        Specifically, the following attributes are reset:</span>
+
+<span class="sd">        - `zoom_factor`: Set to `default_zoom_factor` to restore the original zoom level.</span>
+<span class="sd">        - `rot_x`, `rot_y`, `rot_z`: Rotation angles around the X, Y, and Z axes are reset to default values, default_rot_x, etc.</span>
+<span class="sd">        - `pan_x`, `pan_y`, `pan_z`: Panning offsets along the X, Y, and Z axes are reset to default values, default_pan_x.</span>
+<span class="sd">        - `camera_distance`: Set to `default_camera_distance` to restore the original distance from the point cloud.</span>
+
+<span class="sd">        After resetting these parameters, the view is updated to reflect the changes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_zoom_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_rot_x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_rot_y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rot_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_rot_z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pan_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_pan_x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pan_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_pan_y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pan_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_pan_z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_camera_distance</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">default_pan_x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">default_pan_y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">default_pan_z</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Sepehr Sobhani.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
